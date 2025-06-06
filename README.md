@@ -19,5 +19,5 @@ https://hub.docker.com/repository/docker/moosestack/troubleshooting-tools/tags
      2. `oc exec -it -n <NAMESPACE> deployments/troubleshooting-tools -- /bin/bash`
 
  - **kubectl** - update `<NAMESPACE>`: :
-     1. `oc apply -f https://raw.githubusercontent.com/MooseStack/troubleshooting_tools_container/refs/heads/main/openshift.yaml -n <NAMESPACE>`
-     2. `oc exec -it -n <NAMESPACE> deployments/troubleshooting-tools -- /bin/bash`
+     1. `kubectl apply -f https://raw.githubusercontent.com/MooseStack/troubleshooting_tools_container/refs/heads/main/openshift.yaml -n <NAMESPACE>`
+     2. `kubectl exec -it -n <NAMESPACE> deployments/troubleshooting-tools -- /bin/bash`
