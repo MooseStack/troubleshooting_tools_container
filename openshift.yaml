@@ -4,20 +4,18 @@ kind: ServiceAccount
 metadata:
   name: troubleshooting-sa
 ---
-# SecurityContextConstraints to allow privileged operations for the ServiceAccount
-apiVersion: security.openshift.io/v1
-kind: SecurityContextConstraints
+# RoleBinding to grant the ServiceAccount access to the privileged SCC
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
 metadata:
-  name: troubleshooting-tools-scc
-allowPrivilegedContainer: true
-runAsUser:
-  type: RunAsAny
-seLinuxContext:
-  type: RunAsAny
-fsGroup:
-  type: RunAsAny
-users:
-  - system:serviceaccount:default:troubleshooting-sa
+  name: troubleshooting-sa-privileged-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+subjects:
+  - kind: ServiceAccount
+    name: troubleshooting-sa
 ---
 # Deployment for the troubleshooting tools container
 apiVersion: apps/v1
@@ -39,7 +37,10 @@ spec:
         - name: troubleshooting-tools
           image: docker.io/moosestack/troubleshooting-tools:latest  # Use the latest built image
           securityContext:
-            privileged: true  # Required for some network tools and if you want to install more packages with dnf
+            # Required for some network tools and if you want to install more packages with dnf
+            privileged: true 
+            runAsUser: 0
+            allowPrivilegeEscalation: true
           resources:
             requests:
               memory: "128Mi"  # Minimum memory guaranteed

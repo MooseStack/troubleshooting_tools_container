@@ -14,6 +14,10 @@ https://hub.docker.com/repository/docker/moosestack/troubleshooting-tools/tags
 
  - **Podman**: `podman run -it docker.io/moosestack/troubleshooting-tools:latest /bin/bash`
   
- - **oc** (OpenShift CLI): `oc apply -f https://raw.githubusercontent.com/moosestack/troubleshooting_tools_container/main/openshift.yaml -n yourNamespaceName`
+ - **oc** (OpenShift CLI) - update `<NAMESPACE>`: 
+     1. `oc apply -f https://raw.githubusercontent.com/MooseStack/troubleshooting_tools_container/refs/heads/main/openshift.yaml -n <NAMESPACE>`
+     2. `oc exec -it -n <NAMESPACE> deployments/troubleshooting-tools -- /bin/bash`
 
- - **kubectl**: `kubectl apply -f https://raw.githubusercontent.com/moosestack/troubleshooting_tools_container/main/openshift.yaml -n yourNamespaceName`
+ - **kubectl** - update `<NAMESPACE>`: :
+     1. `oc apply -f https://raw.githubusercontent.com/MooseStack/troubleshooting_tools_container/refs/heads/main/openshift.yaml -n <NAMESPACE>`
+     2. `oc exec -it -n <NAMESPACE> deployments/troubleshooting-tools -- /bin/bash`
