@@ -1,0 +1,49 @@
+# ServiceAccount for troubleshooting tools pod
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: troubleshooting-sa
+---
+# SecurityContextConstraints to allow privileged operations for the ServiceAccount
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: troubleshooting-tools-scc
+allowPrivilegedContainer: true
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+fsGroup:
+  type: RunAsAny
+users:
+  - system:serviceaccount:default:troubleshooting-sa
+---
+# Deployment for the troubleshooting tools container
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: troubleshooting-tools
+spec:
+  replicas: 1  # Only one pod needed for troubleshooting
+  selector:
+    matchLabels:
+      app: troubleshooting-tools
+  template:
+    metadata:
+      labels:
+        app: troubleshooting-tools
+    spec:
+      serviceAccountName: troubleshooting-sa  # Use the above ServiceAccount
+      containers:
+        - name: troubleshooting-tools
+          image: docker.io/moosestack/troubleshooting-tools:latest  # Use the latest built image
+          securityContext:
+            privileged: true  # Required for some network tools and if you want to install more packages with dnf
+          resources:
+            requests:
+              memory: "128Mi"  # Minimum memory guaranteed
+              cpu: ".3"        # Minimum CPU guaranteed
+            limits:
+              memory: "512Mi"  # Maximum memory allowed
+              cpu: "1"         # Maximum CPU allowed
