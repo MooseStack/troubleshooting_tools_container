@@ -2,6 +2,9 @@ FROM docker.io/fedora:43
 
 RUN dnf -y update && \
     dnf -y install \
+        awscli \
+        git \
+        jq \
         telnet \
         curl \
         bind-utils \
